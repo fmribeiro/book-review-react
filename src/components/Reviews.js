@@ -1,35 +1,58 @@
-import React from "react";
-import { Card, Col, Row } from "antd";
+import React, { useCallback, useEffect } from "react";
+import { Row } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 
-const Cards = () => {
-  const elements = Array.from(Array(18).keys());
+import * as reviewActions from "../store/actions/reviews";
+import ReviewCard from "./ReviewCard";
+import { useLocation } from "react-router-dom";
 
-  return elements.map((elem) => {
-    return (
-      <Col xs={24} sm={12} md={12} lg={8} xl={6} key={elem}>
-        <Card title="Resenha" bordered={false} key={elem}>
-          <p>Card content</p>
-          <p>Card content</p>
-          <p>Card content</p>
-        </Card>
-      </Col>
-    );
-  });
+const reviewAction = (pathname) => {
+  let action;
+  if (pathname === "/reviews") {
+    action = reviewActions.fetchReviews();
+  }
+
+  if (pathname === "/reviews/user") {
+    action = reviewActions.fetchUserReviews();
+  }
+
+  if (pathname === "/reviews/liked") {
+    action = reviewActions.fetchFavoritesReviews();
+  }
+
+  return action;
 };
 
 const Reviews = (props) => {
-  const elements = Array.from(Array(10).keys());
+  const dispatch = useDispatch();
+  const reviews = useSelector((state) => state.reviews.reviews);
+  const location = useLocation();
+
+  console.log(`location: ${JSON.stringify(location)}`);
+
+  const loadReviews = useCallback(async () => {
+    try {
+      await dispatch(reviewAction(location.pathname));
+    } catch (error) {
+      console.log("Erro ao buscar as reviews");
+    }
+  }, [dispatch, location]);
+
+  useEffect(() => {
+    loadReviews().then(() => {});
+  }, [dispatch, loadReviews]);
 
   return (
     <div
       id="card-container"
       style={{
         display: "flex",
-        margin: "10px",
+        marginLeft: "10px",
+        marginTop: "10px",
       }}
     >
       <Row gutter={[16, 16]} style={{ width: "100%" }}>
-        <Cards />
+        <ReviewCard reviews={reviews} />
       </Row>
     </div>
   );

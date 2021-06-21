@@ -1,14 +1,16 @@
-import React from "react";
-import { Layout } from "antd";
 import "../App.css";
-import Reviews from "./Reviews";
+
+import { Layout } from "antd";
+import React from "react";
+
+import AppRouter from "../router/Router";
 
 const { Content } = Layout;
 
 const ContentComponent = (props) => {
   return (
     <Content style={{ minHeight: "100vh" }}>
-      <Reviews />
+      <AppRouter />
     </Content>
   );
 };

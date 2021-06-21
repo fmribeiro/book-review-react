@@ -1,15 +1,62 @@
 import "../App.css";
 
-import { BookOutlined } from "@ant-design/icons";
-import { Layout, Typography } from "antd";
-import React from "react";
+import {
+  BookFilled,
+  BookOutlined,
+  DownOutlined,
+  FormOutlined,
+  LoginOutlined,
+  PlusCircleFilled,
+  SearchOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Dropdown,
+  Input,
+  Layout,
+  Menu,
+  Tooltip,
+  Typography,
+} from "antd";
+import React, { useState } from "react";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 
 const { Header } = Layout;
 const { Text } = Typography;
 
-const styles = { backgroundColor: "lightblue", display: "flex" };
+// const styles = { backgroundColor: "lightblue", display: "flex" };
+const menuLogout = (
+  <Menu>
+    <Menu.Item icon={<LoginOutlined />}>
+      <a target="_blank" rel="noopener noreferrer" href="#">
+        Sair
+      </a>
+    </Menu.Item>
+  </Menu>
+);
+
+const menuAdd = (
+  <Menu>
+    <Menu.Item icon={<BookFilled />}>
+      <a target="_blank" rel="noopener noreferrer" href="#">
+        Livro
+      </a>
+    </Menu.Item>
+    <Menu.Item icon={<FormOutlined />}>
+      <a target="_blank" rel="noopener noreferrer" href="#">
+        Resenha
+      </a>
+    </Menu.Item>
+  </Menu>
+);
 
 const HeaderComponent = (props) => {
+  const [isLogged, setIsLogged] = useState(false);
+  const params = useParams();
+
+  console.log(`location: ${JSON.stringify(params)}`);
+
   return (
     <Header
       style={{
@@ -51,17 +98,56 @@ const HeaderComponent = (props) => {
         <div
           style={{
             display: "flex",
-            flexDirection: "row-reverse",
+            flexDirection: "row",
             flex: 2,
+            justifyContent: "flex-end",
+            alignItems: "center",
           }}
         >
-          <Text>Usuario: fmribeiro21</Text>
-          <Text style={{ marginRight: "1em" }}>Buscar resenha&#x1F50D;</Text>
+          <Input
+            size="large"
+            placeholder="Buscar resenhas"
+            prefix={<SearchOutlined />}
+            style={{
+              marginRight: "1em",
+              width: 300,
+              height: 40,
+            }}
+          />
+
+          {!isLogged && (
+            <Tooltip title="login">
+              <Link to="/auth">
+                <Button size="middle" shape="circle" icon={<LoginOutlined />} />
+              </Link>
+            </Tooltip>
+          )}
         </div>
+
+        {isLogged && (
+          <Dropdown overlay={menuLogout}>
+            <span>
+              username <DownOutlined />
+            </span>
+          </Dropdown>
+        )}
       </div>
 
-      <div id="bottom_header" style={{ height: "30%", lineHeight: "16px" }}>
-        <span style={{}}>Resenhas Recentes</span>
+      <div
+        id="bottom_header"
+        style={{
+          height: "30%",
+          lineHeight: "16px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <span style={{ width: "50%" }}></span>
+        {isLogged && (
+          <Dropdown overlay={menuAdd}>
+            <PlusCircleFilled style={{ fontSize: 18 }} />
+          </Dropdown>
+        )}
       </div>
     </Header>
   );
