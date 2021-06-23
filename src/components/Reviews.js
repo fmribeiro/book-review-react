@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -8,7 +8,7 @@ import { useLocation } from "react-router-dom";
 
 const reviewAction = (pathname) => {
   let action;
-  if (pathname === "/reviews") {
+  if (pathname === "/" || pathname === "/reviews") {
     action = reviewActions.fetchReviews();
   }
 
@@ -20,6 +20,14 @@ const reviewAction = (pathname) => {
     action = reviewActions.fetchFavoritesReviews();
   }
 
+  if (pathname === "/user/reviews/favorites") {
+    action = reviewActions.fetchReviews();
+  }
+
+  if (pathname === "/user/reviews/mine") {
+    action = reviewActions.fetchReviews();
+  }
+
   return action;
 };
 
@@ -27,19 +35,23 @@ const Reviews = (props) => {
   const dispatch = useDispatch();
   const reviews = useSelector((state) => state.reviews.reviews);
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(false);
 
   console.log(`location: ${JSON.stringify(location)}`);
 
   const loadReviews = useCallback(async () => {
     try {
+      setIsLoading(true);
       await dispatch(reviewAction(location.pathname));
     } catch (error) {
       console.log("Erro ao buscar as reviews");
     }
-  }, [dispatch, location]);
+  }, [dispatch, location.pathname]);
 
   useEffect(() => {
-    loadReviews().then(() => {});
+    loadReviews().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadReviews]);
 
   return (
@@ -52,7 +64,7 @@ const Reviews = (props) => {
       }}
     >
       <Row gutter={[16, 16]} style={{ width: "100%" }}>
-        <ReviewCard reviews={reviews} />
+        <ReviewCard reviews={reviews} isLoading={isLoading} />
       </Row>
     </div>
   );

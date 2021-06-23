@@ -11,7 +11,7 @@ const ReviewCard = (props) => {
   return props.reviews.map((elem) => {
     return (
       <Col xs={24} sm={12} md={12} lg={8} xl={6} key={elem.id}>
-        <Card title={elem.bookTitle} bordered={false} key={elem.id}>
+        <Card title={elem.bookTitle} bordered={false} key={elem.id} loading={props.isLoading}>
           <p
             style={{
               overflow: "hidden",

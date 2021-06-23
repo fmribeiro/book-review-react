@@ -21,6 +21,7 @@ import {
 import React, { useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const { Header } = Layout;
 const { Text } = Typography;
@@ -28,11 +29,7 @@ const { Text } = Typography;
 // const styles = { backgroundColor: "lightblue", display: "flex" };
 const menuLogout = (
   <Menu>
-    <Menu.Item icon={<LoginOutlined />}>
-      <a target="_blank" rel="noopener noreferrer" href="#">
-        Sair
-      </a>
-    </Menu.Item>
+    <Menu.Item icon={<LoginOutlined />}>Sair</Menu.Item>
   </Menu>
 );
 
@@ -52,10 +49,11 @@ const menuAdd = (
 );
 
 const HeaderComponent = (props) => {
-  const [isLogged, setIsLogged] = useState(false);
-  const params = useParams();
+  const isAuth = useSelector((state) => !!state.auth.token);
+  // const [isLogged, setIsLogged] = useState(false);
+  // const params = useParams();
 
-  console.log(`location: ${JSON.stringify(params)}`);
+  // console.log(`location: ${JSON.stringify(params)}`);
 
   return (
     <Header
@@ -115,7 +113,7 @@ const HeaderComponent = (props) => {
             }}
           />
 
-          {!isLogged && (
+          {!isAuth && (
             <Tooltip title="login">
               <Link to="/auth">
                 <Button size="middle" shape="circle" icon={<LoginOutlined />} />
@@ -124,7 +122,7 @@ const HeaderComponent = (props) => {
           )}
         </div>
 
-        {isLogged && (
+        {isAuth && (
           <Dropdown overlay={menuLogout}>
             <span>
               username <DownOutlined />
@@ -143,7 +141,7 @@ const HeaderComponent = (props) => {
         }}
       >
         <span style={{ width: "50%" }}></span>
-        {isLogged && (
+        {isAuth && (
           <Dropdown overlay={menuAdd}>
             <PlusCircleFilled style={{ fontSize: 18 }} />
           </Dropdown>

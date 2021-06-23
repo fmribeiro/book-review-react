@@ -4,7 +4,7 @@ const BookCard = (props) => {
   return props.books.map((book) => {
     return (
       <Col xs={24} sm={12} md={12} lg={8} xl={4} key={book.id}>
-        <Card title={book.title} bordered={false} key={book.id}>
+        <Card title={book.title} bordered={false} key={book.id} loading={props.isLoading}>
           <div style={{ display: "flex", marginBottom: "1em" }}>
             <img src={book.imagePath} alt="book cover" />
             <div

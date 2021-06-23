@@ -6,7 +6,7 @@ const UserCard = (props) => {
   return props.users.map((elem) => {
     return (
       <Col xs={24} sm={12} md={12} lg={8} xl={4} key={elem.id}>
-        <Card title={elem.nickname} bordered={false} key={elem.id}>
+        <Card title={elem.nickname} bordered={false} key={elem.id} loading={props.isLoading}>
           <div
             style={{
               display: "flex",
